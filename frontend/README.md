@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+Frontend --- Overview
+===================
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This folder contains the **frontend app** for the Assignment project.\
+It is a small **React + Vite** app that fetches student assessment data by username and displays scores using progress bars.
 
-Currently, two official plugins are available:
+* * * * *
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Tech Used
+---------
 
-## React Compiler
+-   React (hooks, functional components)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   Vite
 
-## Expanding the ESLint configuration
+-   TypeScript
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-   Tailwind CSS
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+-   `@radix-ui/react-progress`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* * * * *
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+How It Works
+------------
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1.  The app uses a route `/:user`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2.  Opening `http://localhost:5173/rahul` loads the `Home` component.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3.  `Home` reads the `user` from the URL.
+
+4.  It calls `fetchData(user)` to get data from the backend.
+
+5.  The response is rendered as:
+
+    -   Student name & overall score
+
+    -   Individual skill scores with progress bars
+
+**Backend response format expected:**
+
+`{
+  "data": {
+    "name": "rahul",
+    "Overall_score": "8/9",
+    "Score": [{ "Pronunciation": "9/9" }]
+  }
+}`
+
+Each `"X/Y"` score is converted to a percentage for the progress bar.
+
+* * * * *
+
+Important Files
+---------------
+
+-   `src/home.tsx` -- Main page, fetches and displays data
+
+-   `src/api/featchapi.js` -- API fetch helper
+
+-   `src/components/Progress.tsx` -- Progress bar component
+
+* * * * *
+
+Run Frontend Locally
+--------------------
+
+`cd frontend
+npm install
+npm run dev`
+
+Open:
+
+`http://localhost:5173/rahul`
+
+(Backend must be running.)
+
+* * * * *
+
+API Base URL
+------------
+
+Current API URL in `featchapi.js`:
+
+`http://localhost:4000/api`
+
+Make sure:
+
+-   Backend runs on **port 4000**, or
+
+-   Update the URL to match backend port (e.g. `3000`)
+
+### Recommended (optional)
+
+Use environment variable:
+
+`VITE_API_BASE_URL=http://localhost:4000/api`
+
+Then in code:
+
+`const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;`
